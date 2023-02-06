@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const Person = mongoose.model("Person", {
-  name: String,
-  salary: Number,
-  approved: Boolean,
+  local: String,
+  date: Date,
+  dateBr: String,
 });
 
 module.exports = Person;

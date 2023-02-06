@@ -3,17 +3,22 @@ const Person = require("../models/Person");
 
 // Criação de dados
 router.post("/", async (req, res) => {
-  const { name, salary, approved } = req.body;
-
-  if (!name) {
-    res.status(422).json({ error: "O nome é obrigatório!" });
+  const { local, date } = req.body;
+  var regEx = /^\d{4}-\d{2}-\d{2}$/;
+  if (!date.match(regEx)) {
+    res
+      .status(422)
+      .json({ error: "A data deve ser YYYY-MM-DD. Exemplo 2023-12-31" });
     return;
   }
 
+  const dateMongo = new Date(`${date}T23:59:59.468Z`);
+
+  const splitDate = date.split("-");
   const person = {
-    name,
-    salary,
-    approved,
+    local,
+    date: dateMongo,
+    dateBr: `${splitDate[2]}/${splitDate[1]}`,
   };
 
   try {
@@ -27,9 +32,15 @@ router.post("/", async (req, res) => {
 
 // Leitura de dados
 router.get("/", async (req, res) => {
+  const currentDate = new Date();
+  // console.log({ currentDate });
   try {
-    const people = await Person.find();
+    const people = await Person.find({ date: { $gt: currentDate } });
 
+    // console.log(new ISODate());
+    // console.log(new Date());
+    // console.log(new Date() < new Date("2023-02-06T23:59:59.468Z"));
+    // console.log(people);
     res.status(200).json(people);
   } catch (error) {
     res.status.apply(500).json({ error: error });
