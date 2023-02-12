@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
-const Person = mongoose.model("Person", {
+const Schedule = mongoose.model("schedule", {
   local: String,
+  mapsInfo: String,
   city: String,
   state: String,
   address: String,
@@ -10,4 +11,4 @@ const Person = mongoose.model("Person", {
   dateBr: String,
 });
 
-module.exports = Person;
+module.exports = Schedule;

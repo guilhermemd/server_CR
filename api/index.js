@@ -13,9 +13,9 @@ app.use(
 app.use(express.json());
 
 // rotas da API
-const personRoutes = require("./routes/personRoutes");
+const scheduleRoutes = require("../routes/scheduleRoutes");
 
-app.use("/person", personRoutes);
+app.use("/schedule", scheduleRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Oi Express!" });

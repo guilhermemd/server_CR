@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const Person = require("../models/Person");
+const Schedule = require("../models/Schedule");
 
 // Criação de dados
 router.post("/", async (req, res) => {
-  const { local, date, city, state, address, hour } = req.body;
+  const { local, date, city, state, address, mapsInfo, hour } = req.body;
   var regEx = /^\d{4}-\d{2}-\d{2}$/;
   if (!date.match(regEx)) {
     res
@@ -15,10 +15,11 @@ router.post("/", async (req, res) => {
   const dateMongo = new Date(`${date}T23:59:59.468Z`);
 
   const splitDate = date.split("-");
-  const person = {
-    local,
+  const schedule = {
     date: dateMongo,
     dateBr: `${splitDate[2]}/${splitDate[1]}`,
+    local,
+    mapsInfo: mapsInfo ? mapsInfo : "",
     city: city ? city : "",
     state: state ? state : "",
     address: address ? address : "",
@@ -26,7 +27,7 @@ router.post("/", async (req, res) => {
   };
 
   try {
-    await Person.create(person);
+    await Schedule.create(schedule);
 
     res.status(201).json({ msg: "Data inserida com sucesso!" });
   } catch (error) {
@@ -38,9 +39,9 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   const currentDate = new Date();
   try {
-    const people = await Person.find({ date: { $gt: currentDate } });
+    const schedule = await Schedule.find({ date: { $gt: currentDate } });
 
-    res.status(200).json(people);
+    res.status(200).json(schedule);
   } catch (error) {
     res.status.apply(500).json({ error: error });
   }
@@ -49,13 +50,13 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const person = await Person.findOne({ _id: id });
+    const schedule = await Schedule.findOne({ _id: id });
 
-    if (!person) {
+    if (!schedule) {
       res.status(422).json({ message: "Usuário não encontrado." });
       return;
     }
-    res.status(200).json(person);
+    res.status(200).json(schedule);
   } catch (error) {
     res.status.apply(500).json({ error: error });
   }
@@ -67,20 +68,20 @@ router.patch("/:id", async (req, res) => {
 
   const { name, salary, approved } = req.body;
 
-  const person = {
+  const schedule = {
     name,
     salary,
     approved,
   };
 
   try {
-    const updatePerson = await Person.updateOne({ _id: id }, person);
+    const updateSchedule = await Schedule.updateOne({ _id: id }, schedule);
 
-    if (updatePerson.matchedCount === 0) {
+    if (updateSchedule.matchedCount === 0) {
       res.status(422).json({ message: "Usuário não encontrado." });
       return;
     }
-    res.status(200).json(person);
+    res.status(200).json(schedule);
   } catch (error) {
     res.status.apply(500).json({ error: error });
   }
@@ -91,13 +92,13 @@ router.patch("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
 
-  const person = await Person.findOne({ _id: id });
-  if (!person) {
+  const schedule = await Schedule.findOne({ _id: id });
+  if (!schedule) {
     res.status(422).json({ message: "Usuário não encontrado." });
     return;
   }
   try {
-    await Person.deleteOne({ _id: id });
+    await Schedule.deleteOne({ _id: id });
     res.status(200).json({ msg: "Usuário deletado" });
   } catch (error) {
     res.status.apply(500).json({ error: error });
