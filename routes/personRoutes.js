@@ -3,7 +3,7 @@ const Person = require("../models/Person");
 
 // Criação de dados
 router.post("/", async (req, res) => {
-  const { local, date } = req.body;
+  const { local, date, city, state, address, hour } = req.body;
   var regEx = /^\d{4}-\d{2}-\d{2}$/;
   if (!date.match(regEx)) {
     res
@@ -19,12 +19,16 @@ router.post("/", async (req, res) => {
     local,
     date: dateMongo,
     dateBr: `${splitDate[2]}/${splitDate[1]}`,
+    city: city ? city : "",
+    state: state ? state : "",
+    address: address ? address : "",
+    hour: hour ? hour : "",
   };
 
   try {
     await Person.create(person);
 
-    res.status(201).json({ msg: "Pessoa Inserida no sistema com sucesso!" });
+    res.status(201).json({ msg: "Data inserida com sucesso!" });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -33,14 +37,9 @@ router.post("/", async (req, res) => {
 // Leitura de dados
 router.get("/", async (req, res) => {
   const currentDate = new Date();
-  // console.log({ currentDate });
   try {
     const people = await Person.find({ date: { $gt: currentDate } });
 
-    // console.log(new ISODate());
-    // console.log(new Date());
-    // console.log(new Date() < new Date("2023-02-06T23:59:59.468Z"));
-    // console.log(people);
     res.status(200).json(people);
   } catch (error) {
     res.status.apply(500).json({ error: error });
