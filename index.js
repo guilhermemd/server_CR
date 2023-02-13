@@ -13,7 +13,7 @@ app.use(
 app.use(express.json());
 
 // rotas da API
-const scheduleRoutes = require("../routes/scheduleRoutes");
+const scheduleRoutes = require("./routes/scheduleRoutes");
 
 app.use("/schedule", scheduleRoutes);
 
