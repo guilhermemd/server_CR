@@ -63,29 +63,29 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update de dados
-router.patch("/:id", async (req, res) => {
-  const id = req.params.id;
+// router.patch("/:id", async (req, res) => {
+//   const id = req.params.id;
 
-  const { name, salary, approved } = req.body;
+//   const { name, salary, approved } = req.body;
 
-  const schedule = {
-    name,
-    salary,
-    approved,
-  };
+//   const schedule = {
+//     name,
+//     salary,
+//     approved,
+//   };
 
-  try {
-    const updateSchedule = await Schedule.updateOne({ _id: id }, schedule);
+//   try {
+//     const updateSchedule = await Schedule.updateOne({ _id: id }, schedule);
 
-    if (updateSchedule.matchedCount === 0) {
-      res.status(422).json({ message: "Usuário não encontrado." });
-      return;
-    }
-    res.status(200).json(schedule);
-  } catch (error) {
-    res.status.apply(500).json({ error: error });
-  }
-});
+//     if (updateSchedule.matchedCount === 0) {
+//       res.status(422).json({ message: "Usuário não encontrado." });
+//       return;
+//     }
+//     res.status(200).json(schedule);
+//   } catch (error) {
+//     res.status.apply(500).json({ error: error });
+//   }
+// });
 
 //Delete
 
